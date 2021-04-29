@@ -1,0 +1,5 @@
+count objects - é preciso mostrar o histograma?
+	      - é necessário mostrar o max para o gray level?
+	      - se: raio 5/6/7 funcionam todos no Moedas1, mas não nos outros; há forma de calcular qual o melhor? se raio funcionar nestas imagens, também funciona nas de teste?
+
+start menu?
