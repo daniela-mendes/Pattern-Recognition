@@ -3,14 +3,16 @@ function TransformObject(image)
     img = imread(image);
 
     while true
-        i = imcrop(img);
+        i = imcrop(img, rect);
         answer = questdlg('Which transformation would you like to apply?', 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
 
         switch answer
             case 'Rotation'
-                figure; imshow(imrotate(i, 180));
+                j=imrotate(i, 180, 'bilinear', 'crop');
+                figure; imshow(j);
             case 'Scaling'
-                figure; imshow(imresize(i, 2));
+                j=imresize(i, 2);
+                figure; imshow(j);
         end
 
         answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
@@ -18,9 +20,10 @@ function TransformObject(image)
         switch answer2
             case 'No'
                 break;
-            case 'Yes'
-                close all;
+            
         end
     end
+    
+   
 
 end

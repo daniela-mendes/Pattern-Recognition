@@ -1,4 +1,4 @@
-function [boundaries, inds] = CountObjects(image) %flag = 0: count, flag = 1: resto
+function CountObjects(image) %flag = 0: count, flag = 1: resto
 close all
 
 minArea = 20; % here we set the minimum area of an acceptable region
@@ -10,14 +10,8 @@ thr = graythresh(img)*255 %calculate threshold; multiplication by 255 because of
 bw = img > thr; %binary image, where only the pixels with intensity levels > thr are 'colored' (aka are 1); everything below is zero
 
 %to clean the image, we'll use dilation and then erosion (i.e., closing operation):
-se = strel('disk', 10); %strel creates a structuring element, in this case in the shape of a disk
+se = strel('disk', 7); %strel creates a structuring element, in this case in the shape of a disk
 bw2 = imclose(bw, se); %performs cleaning operation over bw
-
-%D = -bwdist(~bw2);
-%L = watershed(D);
-%L(bw2 == 0) = 0;
-%bw2 = L;
-%bw2 = bw2 | L;
 
 %now, to count the nr. of objects, we need to compute the number of active regions: the CCA algorithm
 [lb num] = bwlabel(bw2); %label binary images; lb corresponds to the label matrix and num corresponds to the number of objects
@@ -30,6 +24,15 @@ fprintf('%s%d\n', 'The number of objects is ', length(inds))
 
 %now, centroid, perimeter and area
 boundaries = bwboundaries(bw2); %boundaries of each region/object, no matter their form
+
+D = bwdist(~bw2);
+figure; imshow(D,[]);
+D = -D;
+figure; imshow(D,[]);
+ = watershed(D);
+bw3(~bw) = 0;
+figure; imshow(bw2);
+figure; imshow(bw3);
 
 figure; imshow(bw2); hold on %start plot
 
@@ -45,7 +48,6 @@ for i=1:length(inds) %for each of the accepted regions:
     text(centroid(1)-20, centroid(2)-25, strcat('Obj:', num2str(i))); %print number on object
     
     fprintf('%s%d%s%d%s%d%s%d%s%d\n', 'Object with label ', inds(i), ' has centroid in (', centroid(1), ' , ', centroid(2), '), perimeter of ', perimeter, ' and area of ', area) 
-    
 end
 
 %figure; hold on %titulo do plot

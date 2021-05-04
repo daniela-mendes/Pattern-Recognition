@@ -6,7 +6,6 @@ start menu?
 
 definicao threshold para cada imagem; 
 
--------------
 
 sharp??
 perguntar se output do count object está janota
@@ -14,3 +13,10 @@ perguntar se quando testar, testa vários exercicios ao mesmo tempo (por causa d
 podemos imprimir info no terminal?
 pergunta 6 - é suposto fazer com o count objects?
 pergunta 7 (geo transf) podemos selecionar o objeto a tranformar e mostrar só esse objeto (se não, como é que lidamos com o fundo?)
+
+
+
+-------------
+
+perguntar se devemos deixar o utilizador desenhar mesmo o que quer rodar ou se deixamos a box
+	- perguntar se dialog box está fixe
