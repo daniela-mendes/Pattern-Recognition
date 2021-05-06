@@ -1,13 +1,20 @@
-function [boundaries, inds] = CountObjects(image) %flag = 0: count, flag = 1: resto
+function [regionProps, boundaries, inds] = CountObjects(image) %flag = 0: count, flag = 1: resto
 close all
 
 minArea = 20; % here we set the minimum area of an acceptable region
 
 RGB = imread(image); %trocar input para image
-img = rgb2gray(RGB); %keeps only luminance/gray-levels
-max(img(:)) %max value of the image; this means that range of gray-level goes from 0 to 255
-thr = graythresh(img)*255 %calculate threshold; multiplication by 255 because of the grey-level
-bw = img > thr; %binary image, where only the pixels with intensity levels > thr are 'colored' (aka are 1); everything below is zero
+max(RGB(:)) %max value of the image; this means that range of gray-level goes from 0 to 255
+
+red = RGB(:,:,1);
+thr = graythresh(red)*255; %calculate threshold
+red = red > thr; % we only keep the pixels with intensity levels > thr, which are the 'colored' pixels (aka are 1); everything below is zero
+
+green = RGB(:,:,2);
+thr = graythresh(green)*255; %calculate threshold
+green = green > thr;
+
+bw = red | green;
 
 %to clean the image, we'll use dilation and then erosion (i.e., closing operation):
 se = strel('disk', 10); %strel creates a structuring element, in this case in the shape of a disk
@@ -31,7 +38,7 @@ fprintf('%s%d\n', 'The number of objects is ', length(inds))
 %now, centroid, perimeter and area
 boundaries = bwboundaries(bw2); %boundaries of each region/object, no matter their form
 
-figure; imshow(bw2); hold on %start plot
+figure; imshow(RGB); hold on %start plot
 
 for i=1:length(inds) %for each of the accepted regions:
     centroid = regionProps(inds(i)).Centroid;
@@ -41,11 +48,13 @@ for i=1:length(inds) %for each of the accepted regions:
     title(strcat('Number of objects:  ', num2str(length(inds))));
     plot(centroid(1), centroid(2), 'r*'); %print centroid in the plot
     plot(boundaries{inds(i)}(:,2),boundaries{inds(i)}(:,1),'Color', rand(1,3),'LineWidth',3); %print perimeter in the plot
-    text(centroid(1)-45, centroid(2)+15, strcat('Area: ', num2str(area))); %print area in the plot
+    text(centroid(1)-45, centroid(2)+15, strcat('Area: ', num2str(area)), 'Color', 'b'); %print area in the plot
     text(centroid(1)-20, centroid(2)-25, strcat('Obj:', num2str(i))); %print number on object
     
     fprintf('%s%d%s%d%s%d%s%d%s%d\n', 'Object with label ', inds(i), ' has centroid in (', centroid(1), ' , ', centroid(2), '), perimeter of ', perimeter, ' and area of ', area) 
     
+end
+
 end
 
 %figure; hold on %titulo do plot
