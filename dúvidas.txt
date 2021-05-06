@@ -20,3 +20,7 @@ pergunta 7 (geo transf) podemos selecionar o objeto a tranformar e mostrar só e
 
 perguntar se devemos deixar o utilizador desenhar mesmo o que quer rodar ou se deixamos a box
 	- perguntar se dialog box está fixe
+
+pergunta 12
+
+heatmap?

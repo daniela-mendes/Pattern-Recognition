@@ -1,5 +1,7 @@
 function CountMoney(regionProps, regionBoundaries, regionInds, image)
 
+img = imread(image);
+
 money = 0;
 count = 1;
 penny = zeros(1, 50);
@@ -62,6 +64,8 @@ figure; imshow(image); hold on %start plot
 for i=1:length(indsPenny) %for each penny:
     title(strcat('Total amount of money: ', strcat(num2str(money), ' euros'))); 
     plot(regionBoundaries{indsPenny(i)}(:,2),regionBoundaries{indsPenny(i)}(:,1),'Color', 'w','LineWidth',4); %print perimeter in the plot
+    %position = [regionProps(indsPenny(i)).Centroid(1) regionProps(indsPenny(i)).Centroid(2)];
+    %insertText(img, position,strcat(num2str(penny(i)), '€'),'AnchorPoint','Center');
     text(regionProps(indsPenny(i)).Centroid(1)-30, regionProps(indsPenny(i)).Centroid(2), strcat(num2str(penny(i)), '€'), 'Color', 'b','FontSize', 20); %print area in the plot
 end
 

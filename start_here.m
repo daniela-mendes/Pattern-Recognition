@@ -1,7 +1,7 @@
 stop = true;
 
 imageMenu = {'Moedas1.jpg', 'Moedas2.jpg', 'Moedas3.jpg', 'Moedas4.jpg'};
-menu= {'Number of objects and their area, perimeter, centroid', 'Sharpness of objects', 'Order objects in the image', 'Geometrical transformation of an object', 'Quantity of money', 'Exit'};
+menu= {'Number of objects and their area, perimeter, centroid', 'Sharpness of objects', 'Order objects in the image', 'Geometrical transformation of an object', 'Select ONE object', 'Heat Map', 'Quantity of money', 'Exit'};
 
 while stop == true
     for i=1:length(imageMenu)
@@ -47,6 +47,12 @@ while stop == true
             case 4
                 TransformObject(image, boundaries{inds(1)})
             case 5
+                [regionProps, boundaries, inds] = CountObjects(image)
+                SelectOneObject(regionProps, inds, image)
+            case 6
+                [regionProps, boundaries, inds] = CountObjects(image)
+                HeatMapFunc(regionProps, inds, image)
+            case 7
                 [regionProps, boundaries, inds] = CountObjects(image)
                 CountMoney(regionProps, boundaries, inds, image)
             case length(menu)
