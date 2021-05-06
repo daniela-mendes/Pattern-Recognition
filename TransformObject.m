@@ -1,26 +1,141 @@
-function TransformObject(image)
+function TransformObject(regionProps, regionInds, image)
 
+while true
     img = imread(image);
 
-    while true
-        i = imcrop(img);
-        answer = questdlg('Which transformation would you like to apply?', 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
+    imNew = zeros(size(img, 1), size(img, 2));
+    imNew(:, :, 1) = 0.27;
+    imNew(:, :, 2) = 0.45;
+    imNew(:, :, 3) = 0.8;
+    figure; imshow(imNew);
 
-        switch answer
-            case 'Rotation'
-                figure; imshow(imrotate(i, 180));
-            case 'Scaling'
-                figure; imshow(imresize(i, 2));
-        end
+    n = 0; but = 1;
 
-        answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
+    imshow(img); hold on; %hold on retains plots in the current axes so that new plots added to the axes do not delete existing plots
+    title ('Select as many objects as you would like and, in the end, press Enter');
 
-        switch answer2
-            case 'No'
-                break;
-            case 'Yes'
-                close all;
+    while (but == 1) %button = 1 means we are left-clicking the mouse
+        [col, lin, but] = ginput(1); %ginput to identify the coordinates of 1 point by moving the cursor to the desired location and clicking on it; to stop, press Return key
+        if (but == 1)
+            n = n+1;
+            cp(n) = col; %x-coordinate 'array'
+            lp(n) = lin; %y-coordinate 'array'
+            plot(col, lin, 'r.', 'MarkerSize', 18); drawnow; % red dots of size 18
         end
     end
 
+    for z=1:n
+        %calculate euclidian distance to find centroid of selected object
+        objectSelected = regionInds(1); %objectSelected is the index of the selected object in regionProps; at first the selected object is the first one in regionProps
+        dist = sqrt((cp(z) - (regionProps(regionInds(1)).Centroid(1))).^2 + (lp(z) - (regionProps(regionInds(1)).Centroid(2))).^2);
+
+        %now, we will compare the distance from [col, lin] to every centroid
+        for i=2:length(regionInds)
+            tmp = sqrt((cp(z) - (regionProps(regionInds(i)).Centroid(1))).^2 + (lp(z) - (regionProps(regionInds(i)).Centroid(2))).^2);
+            if (tmp < dist) %if dist to this centroid is smaller than the previous smaller distance
+                dist = tmp;
+                objectSelected = regionInds(i);
+            end
+        end
+
+        i = imcrop(img, regionProps(objectSelected).BoundingBox);
+        
+        %red = i(:,:,1);
+        %thr = graythresh(red)*255; %calculate threshold
+        %red = red > thr; % we only keep the pixels with intensity levels > thr, which are the 'colored' pixels (aka are 1); everything below is zero
+        %green = i(:,:,2);
+        %thr = graythresh(green)*255; %calculate threshold
+        %green = green > thr;
+
+        %bw = red | green;
+        %bw(:,:,2) = bw;
+        %bw(:,:,3) = bw(:,:,1);
+        %i(bw == 0) = 0;
+
+        answer = questdlg(strcat('Which transformation would you like to apply to object: ', num2str(z), '?'), 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
+
+        switch answer
+            case 'Rotation'
+                i = imrotate(i, 180);
+                box = regionProps(objectSelected).BoundingBox;
+                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 1) = i(1:size(i,1),1:size(i,2),1);
+                %figure; imshow(i(:,:,1));
+                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 2) = i(1:size(i,1),1:size(i,2),2);
+                %figure; imshow(i(:,:,2));
+                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 3) = i(1:size(i,1),1:size(i,2),3);
+                %figure; imshow(i(:,:,3));
+                figure; imshow(imNew);
+
+            case 'Scaling' %FALTA INCLUIR CASO EM QUE "BATE" NAS PAREDES
+                i = imresize(i, 2); %2 times bigger
+                box = regionProps(objectSelected).BoundingBox;
+                xmin = round((box(1)-0.5)-(0.5*box(3)));
+                xmax = xmin+size(i,2)-1;
+                ymin = round((box(2)-0.5)-(0.5*box(4)));
+                ymax = ymin+size(i,1)-1;
+                imNew(ymin:ymax, xmin:xmax, 1) = i(1:size(i,1),1:size(i,2),1);
+                imNew(ymin:ymax, xmin:xmax, 2) = i(1:size(i,1),1:size(i,2),2);
+                imNew(ymin:ymax, xmin:xmax, 3) = i(1:size(i,1),1:size(i,2),3);
+                figure; imshow(imNew);
+
+        end
+
+    end
+
+    answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
+
+    switch answer2
+        case 'No'
+            break;
+        case 'Yes'
+            close all;
+    end
 end
+
+end
+
+%    img = imread(image);
+%    imNew = zeros(size(img, 1), size(img, 2));
+%    imNew(:, :, 1) = 0.27;
+%    imNew(:, :, 2) = 0.45;
+%    imNew(:, :, 3) = 0.8;
+%    figure; imshow(imNew); 
+%    while true
+%        i = imcrop(img);
+%        answer = questdlg('Which transformation would you like to apply?', 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
+
+%        switch answer
+%            case 'Rotation'
+%                i = imrotate(i, 180);
+                
+%                red = i(:,:,1);
+%                thr = graythresh(red)*255; %calculate threshold
+%                red = red > thr; % we only keep the pixels with intensity levels > thr, which are the 'colored' pixels (aka are 1); everything below is zero
+%                green = i(:,:,2);
+%                thr = graythresh(green)*255; %calculate threshold
+%                green = green > thr;
+
+%                bw = red | green;
+                
+%                bw(:,:,2) = bw;
+%                bw(:,:,3) = bw(:,:,1);
+
+%                i(bw == 0) = 0;
+                
+%                background = (i == 0);
+
+%                figure, imshow(i);
+
+%            case 'Scaling'
+%                figure; imshow(imresize(i, 2));
+%        end
+
+%        answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
+
+%        switch answer2
+%            case 'No'
+%                break;
+%            case 'Yes'
+%                close all;
+%        end
+%    end

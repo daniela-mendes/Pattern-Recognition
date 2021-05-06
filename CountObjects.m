@@ -30,7 +30,7 @@ bw2 = imclose(bw, se); %performs cleaning operation over bw
 [lb num] = bwlabel(bw2); %label binary images; lb corresponds to the label matrix and num corresponds to the number of objects
 
 %we need to consider small regions that might not have been removed
-regionProps = regionprops(lb, 'Area', 'Centroid', 'Perimeter'); %regionProps has the properties (in this case, the area) of each object/region
+regionProps = regionprops(lb, 'Area', 'Centroid', 'Perimeter', 'BoundingBox'); %regionProps has the properties (in this case, the area) of each object/region
 inds = find([regionProps.Area] > minArea) %we'll only keep the regions with a meaningful area; inds corresponds to the labels of those regions
 
 fprintf('%s%d\n', 'The number of objects is ', length(inds))

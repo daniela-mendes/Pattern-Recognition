@@ -45,7 +45,8 @@ while stop == true
             case 3
                 OrderObjects(image)
             case 4
-                TransformObject(image)
+                [regionProps, boundaries, inds] = CountObjects(image)
+                TransformObject(regionProps, inds, image)
             case 5
                 [regionProps, boundaries, inds] = CountObjects(image)
                 SelectOneObject(regionProps, inds, image)
