@@ -7,7 +7,6 @@ imshow(img); hold on; %hold on retains plots in the current axes so that new plo
 [col, lin, but] = ginput(1); %ginput to identify the coordinates of 1 point by moving the cursor to the desired location and clicking on it; to stop, press Return key
 
 %calculate euclidian distance to find centroid of selected object
-
 objectSelected = regionInds(1); %objectSelected is the index of the selected object in regionProps; at first the selected object is the first one in regionProps
 dist = sqrt((col - (regionProps(regionInds(1)).Centroid(1))).^2 + (lin - (regionProps(regionInds(1)).Centroid(2))).^2);
 
