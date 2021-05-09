@@ -1,5 +1,7 @@
 function OrderObjects(regionProps, regionBoundaries, regionInds, image)
 
+close all
+
 %order by area, perimeter and value
 
 cont = true;
@@ -30,8 +32,8 @@ while cont == true
             
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
-                subplot(1, length(inds), i), imshow(j); title({['Area: ']
-                    [num2str(regionProps(inds(i)).Area)]})
+                subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Area: ']
+                    [num2str(regionProps(inds(i)).Area)]});
                 hold on
             end
 
@@ -52,7 +54,7 @@ while cont == true
 
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
-                subplot(1, length(inds), i), imshow(j); title({['Perimeter: ']
+                subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Perimeter: ']
                     [num2str(regionProps(inds(i)).Perimeter)]});
                 hold on
             end
@@ -71,7 +73,7 @@ while cont == true
 
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
-                subplot(1, length(inds), i), imshow(j); title({['Value: ']
+                subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Value: ']
                     [strcat(num2str(penny(i)), '€')]});
                 hold on
             end

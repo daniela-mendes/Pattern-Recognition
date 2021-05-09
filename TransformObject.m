@@ -1,5 +1,7 @@
 function TransformObject(regionProps, regionInds, image)
 
+close all
+
 while true
     img = imread(image);
 

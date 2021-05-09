@@ -1,4 +1,6 @@
-function SelectOneObject(regionProps, regionInds, image)
+function SelectOneObject(regionProps, regionBoundaries, regionInds, image)
+
+close all
 
 img = imread(image);
 
@@ -21,7 +23,7 @@ end
 
 cont = true;
 
-menu = {'Similarity according to centroids (closest to furthest)', 'Similarity according to perimeter (most similar to least similar)', 'Similarity according to area (most similar to least similar)', 'Similarity according to sharpness (most similar to least similar)', 'Go back to menu'};
+menu = {'Similarity according to centroids (closest to furthest)', 'Similarity according to perimeter (most similar to least similar)', 'Similarity according to area (most similar to least similar)', 'Similarity according to value - for coins only (closest to furthest)', 'Go back to menu'};
 
 while cont == true
     fprintf('\n');
@@ -33,14 +35,13 @@ while cont == true
     
     switch option
         case 1
+            delete(gcf);
             centroid_x = regionProps(objectSelected).Centroid(1);
             centroid_y = regionProps(objectSelected).Centroid(2);
             
-            %centrInds = zeros(1, length(regionInds));
             centrDist = zeros(1, length(regionInds));
             
             for i=1:length(regionInds) %for loop to calculate distance from our selected object to every other centroid
-                %centrInds(i) = regionInds(i);
                 centrDist(i) = sqrt((centroid_x - (regionProps(regionInds(i)).Centroid(1))).^2 + (centroid_y - (regionProps(regionInds(i)).Centroid(2))).^2);
             end
             
@@ -51,10 +52,10 @@ while cont == true
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
                 if i == 1
-                    subplot(1, length(inds), i), imshow(j); title({['Selected']
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Selected']
                     ['Object']});
                 else
-                    subplot(1, length(inds), i), imshow(j); title({['Distance: ']
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Distance: ']
                     [num2str(centrDist(i))]});
                 end
                 hold on
@@ -63,7 +64,7 @@ while cont == true
             hold off;
             
         case 2
-            %delete(gcf);
+            delete(gcf);
             perim = regionProps(objectSelected).Perimeter;
             
             perimeters = zeros(1, length(regionInds));
@@ -80,10 +81,10 @@ while cont == true
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
                 if i == 1
-                    subplot(1, length(inds), i), imshow(j); title({['Selected']
-                    ['Object']}); %['Perimeter: '][num2str(regionProps(inds(i)).Perimeter)]
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Selected object']
+                    [strcat('Perimeter:', num2str(regionProps(inds(i)).Perimeter))]});
                 else
-                    subplot(1, length(inds), i), imshow(j); title({['Perimeter: ']
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Perimeter: ']
                     [num2str(regionProps(inds(i)).Perimeter)]});
                 end
                 hold on
@@ -92,8 +93,61 @@ while cont == true
             hold off;
         
         case 3
+            delete(gcf);
+            area = regionProps(objectSelected).Area;
+            
+            areas = zeros(1, length(regionInds));
+
+            for i=1:length(regionInds)
+                areas(1, i) = abs(regionProps(regionInds(i)).Area - area);
+            end
+
+            [areas, idx] = sort(areas);
+
+            inds = regionInds(idx);
+            
+            for i=1:length(inds)
+                j = imcrop(img, regionProps(inds(i)).BoundingBox);
+                if i == 1
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Selected object']
+                    [strcat('Area:', num2str(regionProps(inds(i)).Area))]});
+                else
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Area: ']
+                    [num2str(regionProps(inds(i)).Area)]});
+                end
+                hold on
+            end
+
+            hold off;
             
         case 4
+            delete(gcf);
+            [coin, indCoin] = CountMoney(regionProps, regionBoundaries, objectSelected, image);
+            
+            [penny, indsPenny] = CountMoney(regionProps, regionBoundaries, regionInds, image); %indsPenny has the indices from regionProps that correspond to coins
+            
+            pennyDiff = zeros(1, length(penny));
+            for i=1:length(indsPenny)
+                pennyDiff(1, i) = abs(penny(i)- coin(1));
+            end
+            
+            [pennyDiff, idx] = sort(pennyDiff);
+            penny = penny(idx);
+            inds = indsPenny(idx);
+
+            for i=1:length(inds)
+                j = imcrop(img, regionProps(inds(i)).BoundingBox);
+                if i == 1
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Selected object']
+                    [strcat('Value:', num2str(penny(i)), '€')]});
+                else
+                    subplot(2, ceil(length(inds)/2), i), imshow(j); title({['Value: ']
+                    [strcat(num2str(penny(i)), '€')]});
+                end
+                hold on
+            end
+
+            hold off;
             
         case 5
             cont = false;
