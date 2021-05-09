@@ -4,7 +4,7 @@ cont = true;
 changeIm = false;
 
 imageMenu = {'Moedas1.jpg', 'Moedas2.jpg', 'Moedas3.jpg', 'Moedas4.jpg'};
-menu= {'Number of objects and their area, perimeter, centroid', 'Sharpness of objects', 'Order objects in the image', 'Geometrical transformation of an object', 'Select ONE object', 'Heat Map', 'Quantity of money', 'Heads and tails detection in coins', 'Change Image', 'Exit program'};
+menu= {'Number of objects and their area, perimeter, centroid', 'Sharpness of objects', 'Order objects in the image', 'Geometrical transformation of an object', 'Similarities between objects', 'Heat Map', 'Quantity of money', 'Heads and tails detection in coins', 'Change Image', 'Exit program'};
 
 while cont == true
     for i=1:length(imageMenu)
