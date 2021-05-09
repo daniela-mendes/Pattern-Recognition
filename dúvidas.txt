@@ -28,6 +28,8 @@ no 8 - pedir qual a ação a aplicar
 
 ----------------------------------
 
-- watershed
+- watershed (ver o strel com --line-- e square)
 - problema da transformação geométrica
 - heatmap é o que se pretende?
+
+processamento; textura

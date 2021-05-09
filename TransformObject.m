@@ -3,11 +3,11 @@ function TransformObject(regionProps, regionInds, image)
 while true
     img = imread(image);
 
-    imNew = zeros(size(img, 1), size(img, 2));
-    imNew(:, :, 1) = 0.27;
-    imNew(:, :, 2) = 0.45;
-    imNew(:, :, 3) = 0.8;
-    figure; imshow(imNew);
+    %imNew = zeros(size(img, 1), size(img, 2));
+    %imNew(:, :, 1) = zeros(size(img, 1), size(img, 2));
+    %imNew(:, :, 2) = zeros(size(img, 1), size(img, 2));
+    %imNew(:, :, 3) = zeros(size(img, 1), size(img, 2));
+    %figure; imshow(imNew);
 
     n = 0; but = 1;
 
@@ -52,31 +52,33 @@ while true
         %bw(:,:,3) = bw(:,:,1);
         %i(bw == 0) = 0;
 
-        answer = questdlg(strcat('Which transformation would you like to apply to object: ', num2str(z), '?'), 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
+        answer = questdlg(strcat('Which transformation would you like to apply to object: ', num2str(z), '?'), 'Possible transformations', 'Rotation', 'Scaling');
 
         switch answer
             case 'Rotation'
                 i = imrotate(i, 180);
                 box = regionProps(objectSelected).BoundingBox;
-                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 1) = i(1:size(i,1),1:size(i,2),1);
+                img((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), :) = i(1:size(i,1),1:size(i,2),:);
                 %figure; imshow(i(:,:,1));
-                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 2) = i(1:size(i,1),1:size(i,2),2);
+                %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 2) = i(1:size(i,1),1:size(i,2),2);
                 %figure; imshow(i(:,:,2));
-                imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 3) = i(1:size(i,1),1:size(i,2),3);
+                %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 3) = i(1:size(i,1),1:size(i,2),3);
                 %figure; imshow(i(:,:,3));
-                figure; imshow(imNew);
+                figure; imshow(img), hold on
+                title('Rotation of 180º was applied to the object');
 
-            case 'Scaling' %FALTA INCLUIR CASO EM QUE "BATE" NAS PAREDES
-                i = imresize(i, 2); %2 times bigger
-                box = regionProps(objectSelected).BoundingBox;
-                xmin = round((box(1)-0.5)-(0.5*box(3)));
-                xmax = xmin+size(i,2)-1;
-                ymin = round((box(2)-0.5)-(0.5*box(4)));
-                ymax = ymin+size(i,1)-1;
-                imNew(ymin:ymax, xmin:xmax, 1) = i(1:size(i,1),1:size(i,2),1);
-                imNew(ymin:ymax, xmin:xmax, 2) = i(1:size(i,1),1:size(i,2),2);
-                imNew(ymin:ymax, xmin:xmax, 3) = i(1:size(i,1),1:size(i,2),3);
-                figure; imshow(imNew);
+            %case 'Scaling' %FALTA INCLUIR CASO EM QUE "BATE" NAS PAREDES                
+                %i = imresize(i, 0.75); %2 times bigger
+                %box = regionProps(objectSelected).BoundingBox;
+                %xmin = round((box(1)-0.5)-((1/0.75)*box(3)));
+                %xmax = xmin+size(i,2)-1;
+                %ymin = round((box(2)-0.5)-((1/0.75)*box(4)));
+                %ymax = ymin+size(i,1)-1;
+                %img(ymin:ymax, xmin:xmax, :) = i(1:size(i,1),1:size(i,2),:);
+                %imNew(ymin:ymax, xmin:xmax, 2) = i(1:size(i,1),1:size(i,2),2);
+                %imNew(ymin:ymax, xmin:xmax, 3) = i(1:size(i,1),1:size(i,2),3);
+                %figure; imshow(img), hold on
+                %title('Object was scaled to twice its size');
 
         end
 
@@ -90,52 +92,7 @@ while true
         case 'Yes'
             close all;
     end
+    
 end
 
 end
-
-%    img = imread(image);
-%    imNew = zeros(size(img, 1), size(img, 2));
-%    imNew(:, :, 1) = 0.27;
-%    imNew(:, :, 2) = 0.45;
-%    imNew(:, :, 3) = 0.8;
-%    figure; imshow(imNew); 
-%    while true
-%        i = imcrop(img);
-%        answer = questdlg('Which transformation would you like to apply?', 'Possible transformations', 'Scaling', 'Rotation', 'Rotation');
-
-%        switch answer
-%            case 'Rotation'
-%                i = imrotate(i, 180);
-                
-%                red = i(:,:,1);
-%                thr = graythresh(red)*255; %calculate threshold
-%                red = red > thr; % we only keep the pixels with intensity levels > thr, which are the 'colored' pixels (aka are 1); everything below is zero
-%                green = i(:,:,2);
-%                thr = graythresh(green)*255; %calculate threshold
-%                green = green > thr;
-
-%                bw = red | green;
-                
-%                bw(:,:,2) = bw;
-%                bw(:,:,3) = bw(:,:,1);
-
-%                i(bw == 0) = 0;
-                
-%                background = (i == 0);
-
-%                figure, imshow(i);
-
-%            case 'Scaling'
-%                figure; imshow(imresize(i, 2));
-%        end
-
-%        answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
-
-%        switch answer2
-%            case 'No'
-%                break;
-%            case 'Yes'
-%                close all;
-%        end
-%    end

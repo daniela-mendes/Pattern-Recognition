@@ -21,13 +21,15 @@ nlin = size(img,1);
 ncol = size(img,2);
 img = rgb2gray(img);
 
+imNew = zeros(nlin, ncol);
+
 for z=1:n
     %calculate euclidian distance to find centroid of selected object
     objectSelected = regionInds(1); %objectSelected is the index of the selected object in regionProps; at first the selected object is the first one in regionProps
     dist = sqrt((cp(z) - (regionProps(regionInds(1)).Centroid(1))).^2 + (lp(z) - (regionProps(regionInds(1)).Centroid(2))).^2);
 
     %now, we will compare the distance from [col, lin] to every centroid
-    for i=2:length(regionInds)
+    for i=1:length(regionInds)
         tmp = sqrt((cp(z) - (regionProps(regionInds(i)).Centroid(1))).^2 + (lp(z) - (regionProps(regionInds(i)).Centroid(2))).^2);
         if (tmp < dist) %if dist to this centroid is smaller than the previous smaller distance
             dist = tmp;
@@ -39,20 +41,24 @@ for z=1:n
         for j=1:ncol
             dist = sqrt((j - (regionProps(objectSelected).Centroid(1))).^2 + (i - (regionProps(objectSelected).Centroid(2))).^2);
             if z == 1
-                img(i, j) = dist;
+                imNew(i, j) = dist;
             else
-                if img(i, j) > dist
-                    img(i, j) = dist;
+                if imNew(i, j) > dist
+                    imNew(i, j) = dist;
                 end
+            %imNew(i,j) = imNew(i,j) + dist;
             end
         end
     end
     
 end
 
-figure; imshow(img); hold on
+v_min = min(imNew(:));
+v_max = max(imNew(:));
+
+figure; imshow(imNew); hold on
 title('Heatmap');
-colormap(flipud(jet)); colorbar%, hold on
-%caxis([0 256]);
+colormap(flipud(jet)); colorbar; hold on
+caxis([v_min v_max]);
 
 end

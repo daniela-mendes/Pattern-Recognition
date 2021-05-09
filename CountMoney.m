@@ -1,4 +1,4 @@
-function CountMoney(regionProps, regionBoundaries, regionInds, image)
+function [penny, indsPenny] = CountMoney(regionProps, regionBoundaries, regionInds, image)
 
 img = imread(image);
 
@@ -8,49 +8,54 @@ penny = zeros(1, 50);
 indsPenny = zeros(1, 50);
 
 for i=1:length(regionInds)
-    % IF NOT SHARP DO IFS
-    if regionProps(regionInds(i)).Area > 9000 && regionProps(regionInds(i)).Area < 12000
-        money = money + 0.01;
-        penny(1, count) = 0.01;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-        
-    elseif regionProps(regionInds(i)).Area > 13000 && regionProps(regionInds(i)).Area < 14700
-        money = money + 0.02;
-        penny(1, count) = 0.02;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-            
-    elseif regionProps(regionInds(i)).Area > 14700 && regionProps(regionInds(i)).Area < 16500
-        money = money + 0.1;
-        penny(1, count) = 0.10;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-            
-    elseif regionProps(regionInds(i)).Area > 16500 && regionProps(regionInds(i)).Area < 18500
-        money = money + 0.05;
-        penny(1, count) = 0.05;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-        
-    elseif regionProps(regionInds(i)).Area > 18500 && regionProps(regionInds(i)).Area < 20500
-        money = money + 0.2;
-        penny(1, count) = 0.20;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-            
-    elseif regionProps(regionInds(i)).Area > 20500 && regionProps(regionInds(i)).Area < 22300 && regionProps(regionInds(i)).Perimeter > 5e+02 && regionProps(regionInds(i)).Perimeter < 5.2e+02 
-        money = money + 1;
-        penny(1, count) = 1;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-         
-    elseif regionProps(regionInds(i)).Area > 22300 && regionProps(regionInds(i)).Area < 24000
-        money = money + 0.5;
-        penny(1, count) = 0.50;
-        indsPenny(1, count) = regionInds(i);
-        count = count + 1;
-        
+    perimeter = regionProps(regionInds(i)).Perimeter;
+    area = regionProps(regionInds(i)).Area;
+	circularity = (perimeter  .^ 2) ./ (4 * pi* area);
+    
+    if circularity < 1.1
+        if regionProps(regionInds(i)).Area > 9000 && regionProps(regionInds(i)).Area < 12000
+            money = money + 0.01;
+            penny(1, count) = 0.01;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 13000 && regionProps(regionInds(i)).Area < 14700
+            money = money + 0.02;
+            penny(1, count) = 0.02;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 14700 && regionProps(regionInds(i)).Area < 16500
+            money = money + 0.1;
+            penny(1, count) = 0.10;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 16500 && regionProps(regionInds(i)).Area < 18500
+            money = money + 0.05;
+            penny(1, count) = 0.05;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 18500 && regionProps(regionInds(i)).Area < 20500
+            money = money + 0.2;
+            penny(1, count) = 0.20;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 20500 && regionProps(regionInds(i)).Area < 22300 && regionProps(regionInds(i)).Perimeter > 5e+02 && regionProps(regionInds(i)).Perimeter < 5.2e+02 
+            money = money + 1;
+            penny(1, count) = 1;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        elseif regionProps(regionInds(i)).Area > 22300 && regionProps(regionInds(i)).Area < 24000
+            money = money + 0.5;
+            penny(1, count) = 0.50;
+            indsPenny(1, count) = regionInds(i);
+            count = count + 1;
+
+        end
     end
 end
 

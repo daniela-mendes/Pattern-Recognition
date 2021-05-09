@@ -43,8 +43,7 @@ while stop == true
             case 1
                 [regionProps, boundaries, inds] = CountObjects(image)
             case 2
-                [regionProps, boundaries, inds] = CountObjects(image)
-                Sharpness(boundaries, inds, image)
+                Sharpness(image)
             case 3
                 [regionProps, boundaries, inds] = CountObjects(image)
                 OrderObjects(regionProps, boundaries, inds, image)

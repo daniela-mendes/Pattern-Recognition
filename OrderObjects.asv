@@ -27,6 +27,10 @@ while stop == true
 
             inds = regionInds(idx);
             
+            box = regionProps(inds(1)).BoundingBox;
+            back = zeros(box(4)*4, box(3)*4);
+            subplot(1, length(inds), 1), imshow(back);
+            hold on;
             for i=1:length(inds)
                 j = imcrop(img, regionProps(inds(i)).BoundingBox);
                 subplot(1, length(inds), i), imshow(j); title({['Area: ']
