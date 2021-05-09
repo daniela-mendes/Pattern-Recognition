@@ -2,11 +2,12 @@ function OrderObjects(regionProps, regionBoundaries, regionInds, image)
 
 %order by area, perimeter, sharpness and value
 
-stop = true;
+cont = true;
 
-menu = {'Order by Area', 'Order by Perimeter', 'Order by Value', 'Order by Sharpness', 'Exit'};
+menu = {'Order by Area', 'Order by Perimeter', 'Order by Value', 'Order by Sharpness', 'Go back to menu'};
 
-while stop == true
+while cont == true
+    fprintf('\n');
     for i=1:length(menu)
         fprintf('%d%s%s\n', i, ' - ', menu{i})
     end
@@ -81,7 +82,7 @@ while stop == true
             %.
         
         case 5
-            stop = false;
+            cont = false;
             break;
             
         otherwise

@@ -52,37 +52,31 @@ while true
         %bw(:,:,3) = bw(:,:,1);
         %i(bw == 0) = 0;
 
-        answer = questdlg(strcat('Which transformation would you like to apply to object: ', num2str(z), '?'), 'Possible transformations', 'Rotation', 'Scaling');
+        i = imrotate(i, 180);
+        box = regionProps(objectSelected).BoundingBox;
+        img((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), :) = i(1:size(i,1),1:size(i,2),:);
+        %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 2) = i(1:size(i,1),1:size(i,2),2);
+        %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 3) = i(1:size(i,1),1:size(i,2),3);
+        %figure; imshow(img), hold on
+        %title('Rotation of 180º was applied to the object');
 
-        switch answer
-            case 'Rotation'
-                i = imrotate(i, 180);
-                box = regionProps(objectSelected).BoundingBox;
-                img((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), :) = i(1:size(i,1),1:size(i,2),:);
-                %figure; imshow(i(:,:,1));
-                %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 2) = i(1:size(i,1),1:size(i,2),2);
-                %figure; imshow(i(:,:,2));
-                %imNew((box(2)-0.5):(box(2)-0.5+box(4)), (box(1)-0.5):(box(1)-0.5+box(3)), 3) = i(1:size(i,1),1:size(i,2),3);
-                %figure; imshow(i(:,:,3));
-                figure; imshow(img), hold on
-                title('Rotation of 180º was applied to the object');
-
-            %case 'Scaling' %FALTA INCLUIR CASO EM QUE "BATE" NAS PAREDES                
-                %i = imresize(i, 0.75); %2 times bigger
-                %box = regionProps(objectSelected).BoundingBox;
-                %xmin = round((box(1)-0.5)-((1/0.75)*box(3)));
-                %xmax = xmin+size(i,2)-1;
-                %ymin = round((box(2)-0.5)-((1/0.75)*box(4)));
-                %ymax = ymin+size(i,1)-1;
-                %img(ymin:ymax, xmin:xmax, :) = i(1:size(i,1),1:size(i,2),:);
-                %imNew(ymin:ymax, xmin:xmax, 2) = i(1:size(i,1),1:size(i,2),2);
-                %imNew(ymin:ymax, xmin:xmax, 3) = i(1:size(i,1),1:size(i,2),3);
-                %figure; imshow(img), hold on
-                %title('Object was scaled to twice its size');
-
-        end
+        %'Scaling'
+        %i = imresize(i, 2); %2 times bigger
+        %box = regionProps(objectSelected).BoundingBox;
+        %xmin = round((box(1)-0.5)-((1/0.75)*box(3)));
+        %xmax = xmin+size(i,2)-1;
+        %ymin = round((box(2)-0.5)-((1/0.75)*box(4)));
+        %ymax = ymin+size(i,1)-1;
+        %img(ymin:ymax, xmin:xmax, :) = i(1:size(i,1),1:size(i,2),:);
+        %imNew(ymin:ymax, xmin:xmax, 2) = i(1:size(i,1),1:size(i,2),2);
+        %imNew(ymin:ymax, xmin:xmax, 3) = i(1:size(i,1),1:size(i,2),3);
+        %figure; imshow(img), hold on
+        %title('Object was scaled to twice its size');
 
     end
+    
+    figure; imshow(img), hold on
+    title('Rotation of 180º was applied to the object');
 
     answer2 = questdlg('Would you like to apply a new transformation?', 'New transformation', 'Yes', 'No', 'No');
 
