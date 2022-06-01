@@ -2,6 +2,12 @@
 
 A project developed to explore the contents of 4 images containing still objects, by providing visual information regarding its contents.
 
+| Group Members |
+| :-: |
+|Daniela Mendes|
+|Vasco Pires|
+|Catarina Rodrigues|
+
 ## How to run the project ##
 1. Run start_here.m
     * A numbered menu will appear, with the name of the images we can explore
